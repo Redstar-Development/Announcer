@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_announcer" default="compile.module.announcer">
+  <dirname property="module.announcer.basedir" file="${ant.file.module_announcer}"/>
+  
+  <property name="module.jdk.home.announcer" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.announcer" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.announcer" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.announcer" value="-encoding UTF-8 -source 1.7 ${compiler.args}"/>
+  
+  <property name="announcer.output.dir" value="${module.announcer.basedir}/out/production/Announcer"/>
+  <property name="announcer.testoutput.dir" value="${module.announcer.basedir}/out/test/Announcer"/>
+  
+  <path id="announcer.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="announcer.module.production.classpath">
+    <path refid="${module.jdk.classpath.announcer}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="announcer.runtime.production.module.classpath">
+    <pathelement location="${announcer.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="announcer.module.classpath">
+    <path refid="${module.jdk.classpath.announcer}"/>
+    <pathelement location="${announcer.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  <path id="announcer.runtime.module.classpath">
+    <pathelement location="${announcer.testoutput.dir}"/>
+    <pathelement location="${announcer.output.dir}"/>
+    <path refid="library.spigot.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.announcer">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.announcer">
+    <patternset refid="excluded.from.module.announcer"/>
+  </patternset>
+  
+  <path id="announcer.module.sourcepath">
+    <dirset dir="${module.announcer.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.announcer" depends="compile.module.announcer.production,compile.module.announcer.tests" description="Compile module Announcer"/>
+  
+  <target name="compile.module.announcer.production" depends="register.custom.compilers" description="Compile module Announcer; production classes">
+    <mkdir dir="${announcer.output.dir}"/>
+    <javac2 destdir="${announcer.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.announcer}/javac">
+      <compilerarg line="${compiler.args.announcer}"/>
+      <bootclasspath refid="announcer.module.bootclasspath"/>
+      <classpath refid="announcer.module.production.classpath"/>
+      <src refid="announcer.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.announcer"/>
+    </javac2>
+    
+    <copy todir="${announcer.output.dir}">
+      <fileset dir="${module.announcer.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.announcer.tests" depends="register.custom.compilers,compile.module.announcer.production" description="compile module Announcer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.announcer" description="cleanup module">
+    <delete dir="${announcer.output.dir}"/>
+    <delete dir="${announcer.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,9 @@
+Announcer:
+    Timers:
+        Startup-Timer: 600
+        Announcer-Timer: 500
+    messages:
+        - d
+        - message1
+        - message2
+        - message3

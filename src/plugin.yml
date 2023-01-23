@@ -1,0 +1,8 @@
+name: Announcer
+main: com.source.java.announcer.Announcer
+version: 0.1
+description: Announcer
+
+commands:
+  test:
+    description: TEST
